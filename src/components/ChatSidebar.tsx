@@ -17,6 +17,7 @@ import { useTheme } from "./ThemeProvider";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { db } from "~/lib/dexie";
 
 const chatGroups = [
   { id: "1", name: "React Basics" },
@@ -40,6 +41,13 @@ export const ChatSidebar = () => {
     }
   };
 
+  const handleCreateThread = async () => {
+    const threadId = await db.createThread(textInput);
+
+    setDialogIsOpen(false);
+    setTextInput("");
+  }
+
   return (
     <>
       <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
@@ -58,7 +66,7 @@ export const ChatSidebar = () => {
           </div>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setDialogIsOpen(false)}>Cancel</Button>
-            <Button>Create Thread</Button>
+            <Button onClick={handleCreateThread}>Create Thread</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
