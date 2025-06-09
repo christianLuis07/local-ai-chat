@@ -14,6 +14,9 @@ import {
   Sidebar as SidebarPrimitive,
 } from "~/components/ui/sidebar";
 import { useTheme } from "./ThemeProvider";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 const chatGroups = [
   { id: "1", name: "React Basics" },
@@ -25,6 +28,8 @@ const chatGroups = [
 
 export const ChatSidebar = () => {
   const [activeChat, setActiveChat] = useState<string | null>(null);
+  const [dialogIsOpen,setDialogIsOpen] = useState(false);
+  const [textInput,setTextInput] = useState("");
   const { setTheme, theme } = useTheme();
 
   const handleToggleTheme = () => {
@@ -36,9 +41,30 @@ export const ChatSidebar = () => {
   };
 
   return (
+    <>
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create new thread</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-1">
+            <Label htmlFor="thread-title">Thread title</Label>
+            <Input id="thread-title" value={textInput} onChange={(e) => {
+              setTextInput(e.target.value);
+            }}
+            placeholder="Your New Thread Title"
+            />
+            
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setDialogIsOpen(false)}>Cancel</Button>
+            <Button>Create Thread</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     <SidebarPrimitive>
       <SidebarHeader>
-        <Button className="w-full justify-start" variant="ghost">
+        <Button onClick={() => setDialogIsOpen(true)} className="w-full justify-start" variant="ghost">
           <Plus className="mr-2 h-4 w-4" />
           New Chat
         </Button>
@@ -74,5 +100,6 @@ export const ChatSidebar = () => {
         </Button>
       </SidebarFooter>
     </SidebarPrimitive>
+    </>
   );
 };
