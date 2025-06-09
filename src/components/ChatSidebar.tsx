@@ -18,20 +18,17 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { db } from "~/lib/dexie";
+import {useLiveQuery} from 'dexie-react-hooks';
+import { Link } from "react-router";
 
-const chatGroups = [
-  { id: "1", name: "React Basics" },
-  { id: "2", name: "AI Ethics" },
-  { id: "3", name: "Climate Change" },
-  { id: "4", name: "JavaScript Tips" },
-  { id: "5", name: "Machine Learning Intro" },
-];
+
 
 export const ChatSidebar = () => {
-  const [activeChat, setActiveChat] = useState<string | null>(null);
   const [dialogIsOpen,setDialogIsOpen] = useState(false);
   const [textInput,setTextInput] = useState("");
   const { setTheme, theme } = useTheme();
+
+  const threads = useLiveQuery(() => db.getAllThreads(), []);
 
   const handleToggleTheme = () => {
     if (theme === "dark") {
@@ -82,14 +79,13 @@ export const ChatSidebar = () => {
           <SidebarGroupContent>
             <SidebarGroupLabel>Recent Chats</SidebarGroupLabel>
             <SidebarMenu>
-              {chatGroups.map((chat) => (
-                <SidebarMenuItem key={chat.id}>
-                  <SidebarMenuButton
-                    onClick={() => setActiveChat(chat.id)}
-                    isActive={activeChat === chat.id}
-                  >
-                    {chat.name}
-                  </SidebarMenuButton>
+              {threads?.map((thread) => (
+                <SidebarMenuItem key={thread.id}>
+                  <Link to={`/thread/${thread.id}`}>
+                   <SidebarMenuButton>
+                    {thread.title}
+                  </SidebarMenuButton></Link>
+                 
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
