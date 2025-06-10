@@ -1,5 +1,5 @@
 import { Moon, Plus, Sun } from "lucide-react";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   SidebarContent,
@@ -19,14 +19,17 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { db } from "~/lib/dexie";
 import {useLiveQuery} from 'dexie-react-hooks';
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 
 
 export const ChatSidebar = () => {
+  const [activeThread, setActiveThread] = useState("");
   const [dialogIsOpen,setDialogIsOpen] = useState(false);
   const [textInput,setTextInput] = useState("");
   const { setTheme, theme } = useTheme();
+
+  const location = useLocation();
 
   const threads = useLiveQuery(() => db.getAllThreads(), []);
 
@@ -44,6 +47,11 @@ export const ChatSidebar = () => {
     setDialogIsOpen(false);
     setTextInput("");
   }
+
+  useLayoutEffect(() => {
+    const activeThreadId = location.pathname.split("/")[2];
+    setActiveThread(activeThreadId);
+  }, [location.pathname]);
 
   return (
     <>
@@ -82,7 +90,7 @@ export const ChatSidebar = () => {
               {threads?.map((thread) => (
                 <SidebarMenuItem key={thread.id}>
                   <Link to={`/thread/${thread.id}`}>
-                   <SidebarMenuButton>
+                   <SidebarMenuButton isActive={thread.id === activeThread}>
                     {thread.title}
                   </SidebarMenuButton></Link>
                  
