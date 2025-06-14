@@ -19,7 +19,7 @@ export const ChatMessage = (props: ChatMessageProps) => {
             : "bg-primary text-primary-foreground"
         }`}
       >
-        <div className="prose">
+        <div className="prose dark:prose-invert">
               <ReactMarkdown>{props.content.trim()}</ReactMarkdown>
         </div>
       </div>
