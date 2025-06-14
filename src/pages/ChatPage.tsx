@@ -43,6 +43,8 @@ const ChatPage = () => {
       stream: true,
     });
 
+    setMessageInput("");
+
     let fullContent = "";
 
     let fullThought = "";
