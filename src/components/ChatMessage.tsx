@@ -6,20 +6,21 @@ interface ChatMessageProps {
 }
 
 export const ChatMessage = (props: ChatMessageProps) => {
+  const isAssistant = props.role === "assistant";
   return (
     <div
       className={`flex items-start gap-4 ${
-        props.role === "assistant" ? "flex-row" : "flex-row-reverse"
+        isAssistant  ? "flex-row" : "flex-row-reverse"
       }`}
     >
       <div
         className={`rounded-lg p-4 max-w-[80%] ${
-          props.role === "assistant"
+          isAssistant
             ? "bg-secondary"
             : "bg-primary text-primary-foreground"
         }`}
       >
-        <div className="prose dark:prose-invert">
+        <div className={`${isAssistant ? "prose dark:prose-invert" : ""}`}>
               <ReactMarkdown>{props.content.trim()}</ReactMarkdown>
         </div>
       </div>
