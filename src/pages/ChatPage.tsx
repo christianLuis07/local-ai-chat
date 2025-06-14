@@ -4,6 +4,7 @@ import { ChatMessage } from "~/components/ChatMessage"
 import { Button } from "~/components/ui/button"
 import { Textarea } from "~/components/ui/textarea"
 import ollama from "ollama";
+import { ThoughtMessage } from "~/components/ThoughtMessage";
 
 type Message = {
   role: "user" | "assistant";
@@ -15,12 +16,13 @@ type Message = {
 const ChatPage = () => {
     const [messageInput,setMessageInput] = useState("");
     const [streamedMessages, setStreamedMessages] = useState("");
+    const [streamedThought,setStreamedThought] = useState("");  
 
      const handleSubmit = async () => {
     alert("chat");
 
     const stream = await ollama.chat({
-      model: "deepseek-r1:1.5b",
+      model: "deepseek-r1:7b",
       messages: [
       {
         role: "user",
@@ -32,10 +34,27 @@ const ChatPage = () => {
 
     let fullContent = "";
 
+    let fullThought = "";
+
+    let outputMode: "think" | "response" = "think";
+
     for await (const part of stream) {
       const messageContent = part.message.content;
-      fullContent += messageContent;
-      setStreamedMessages(fullContent);
+      if (outputMode === "think") {
+        if(!(messageContent.includes("<think>") || messageContent.includes("</think>"))) {
+          fullThought += messageContent;
+        }
+        fullThought += messageContent;
+
+        setStreamedThought(fullThought);
+
+        if(messageContent.includes("</think>")) {
+          outputMode = "response";
+        }
+      } else {
+        fullContent += messageContent;
+        setStreamedMessages(fullContent);
+      }
     }
 };
 
@@ -63,6 +82,12 @@ const chatHistory: Message[] = [
                   content={message.content}
                 />
               ))}
+
+              {
+                !!streamedThought && (
+                  <ThoughtMessage thought={streamedThought} />
+                )
+              }
 
               {
                 !!streamedMessages && (
