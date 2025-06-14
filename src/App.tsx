@@ -13,7 +13,7 @@ export default function App() {
       <div className="flex h-screen bg-background w-full">
         <ChatSidebar />
         <Routes>
-          <Route path='/thread:/threadId' element={<ChatPage />} />
+          <Route path='/thread/:threadId' element={<ChatPage />} />
         </Routes>
       </div>
     </SidebarProvider>
