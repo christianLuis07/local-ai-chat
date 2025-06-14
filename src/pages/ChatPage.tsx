@@ -68,7 +68,10 @@ const ChatPage = () => {
       role: "assistant",
       thought: fullThought,
       thread_id: params.threadId as string,
-    })
+    });
+
+    setStreamedMessages("");
+    setStreamedThought("");
 };
 
 
