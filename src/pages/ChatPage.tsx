@@ -43,11 +43,8 @@ const ChatPage = () => {
       if (outputMode === "think") {
         if(!(messageContent.includes("<think>") || messageContent.includes("</think>"))) {
           fullThought += messageContent;
+          setStreamedThought(fullThought);
         }
-        fullThought += messageContent;
-
-        setStreamedThought(fullThought);
-
         if(messageContent.includes("</think>")) {
           outputMode = "response";
         }
