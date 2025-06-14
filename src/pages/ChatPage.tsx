@@ -87,6 +87,7 @@ const ChatPage = () => {
                   key={index}
                   role={message.role}
                   content={message.content}
+                  thought={message.thought}
                 />
               ))}
 
