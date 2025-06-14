@@ -5,6 +5,8 @@ import { Button } from "~/components/ui/button"
 import { Textarea } from "~/components/ui/textarea"
 import ollama from "ollama";
 import { ThoughtMessage } from "~/components/ThoughtMessage";
+import { db } from "~/lib/dexie";
+import { useParams } from "react-router";
 
 type Message = {
   role: "user" | "assistant";
@@ -18,8 +20,16 @@ const ChatPage = () => {
     const [streamedMessages, setStreamedMessages] = useState("");
     const [streamedThought,setStreamedThought] = useState("");  
 
+    const params = useParams();
+
      const handleSubmit = async () => {
-    alert("chat");
+      // create message User
+     await db.createMessage({
+      content: messageInput,
+      role: "user",
+      thought: "",
+      thread_id: params.threadId as string,
+     })
 
     const stream = await ollama.chat({
       model: "deepseek-r1:7b",
@@ -53,6 +63,13 @@ const ChatPage = () => {
         setStreamedMessages(fullContent);
       }
     }
+
+    await db.createMessage({
+      content: fullContent,
+      role: "assistant",
+      thought: fullThought,
+      thread_id: params.threadId as string,
+    })
 };
 
 const chatHistory: Message[] = [
