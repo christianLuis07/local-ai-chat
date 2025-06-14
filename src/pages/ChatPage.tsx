@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChatMessage } from "~/components/ChatMessage"
 import { Button } from "~/components/ui/button"
 import { Textarea } from "~/components/ui/textarea"
@@ -14,6 +14,8 @@ const ChatPage = () => {
     const [messageInput,setMessageInput] = useState("");
     const [streamedMessages, setStreamedMessages] = useState("");
     const [streamedThought,setStreamedThought] = useState("");  
+
+    const scrollToBottomRef = useRef<HTMLDivElement>(null);
 
     const params = useParams();
     
@@ -102,6 +104,8 @@ const ChatPage = () => {
                 <ChatMessage role="assistant" content={streamedMessages} />
                 )
               }
+
+              <div ref={scrollToBottomRef}></div>
             </div>
           </main>
           <footer className="border-t p-4">
