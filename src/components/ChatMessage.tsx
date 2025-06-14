@@ -1,3 +1,5 @@
+import ReactMarkdown from 'react-markdown';
+
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
@@ -17,7 +19,9 @@ export const ChatMessage = (props: ChatMessageProps) => {
             : "bg-primary text-primary-foreground"
         }`}
       >
-        <p className="whitespace-pre-wrap">{props.content.trim()}</p>
+        <div className="prose">
+              <ReactMarkdown>{props.content.trim()}</ReactMarkdown>
+        </div>
       </div>
     </div>
   );
