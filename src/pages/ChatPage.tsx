@@ -7,12 +7,7 @@ import ollama from "ollama";
 import { ThoughtMessage } from "~/components/ThoughtMessage";
 import { db } from "~/lib/dexie";
 import { useParams } from "react-router";
-
-type Message = {
-  role: "user" | "assistant";
-  content: string;
-};
-
+import { useLiveQuery } from "dexie-react-hooks";
  
 
 const ChatPage = () => {
@@ -21,6 +16,10 @@ const ChatPage = () => {
     const [streamedThought,setStreamedThought] = useState("");  
 
     const params = useParams();
+    
+    const messages = useLiveQuery(() => db.getMessagesForThread(params.threadId as string),
+  [params.threadId] 
+  );
 
      const handleSubmit = async () => {
       // create message User
@@ -72,15 +71,6 @@ const ChatPage = () => {
     })
 };
 
-const chatHistory: Message[] = [
-    { role: "assistant", content: "Hello! How can I assist you today?" },
-    { role: "user", content: "Can you explain what React is?" },
-    {
-      role: "assistant",
-      content:
-        "React is a popular JavaScript library for building user interfaces. It was developed by Facebook and is widely used for creating interactive, efficient, and reusable UI components. React uses a virtual DOM (Document Object Model) to improve performance by minimizing direct manipulation of the actual DOM. It also introduces JSX, a syntax extension that allows you to write HTML-like code within JavaScript.",
-    },
-  ];
 
     return (
          <div className="flex flex-col flex-1">
@@ -89,7 +79,7 @@ const chatHistory: Message[] = [
           </header>
           <main className="flex-1 overflow-auto p-4 w-full">
             <div className="mx-auto space-y-4 pb-20 max-w-screen-md">
-              {chatHistory.map((message, index) => (
+              {messages?.map((message, index) => (
                 <ChatMessage
                   key={index}
                   role={message.role}
