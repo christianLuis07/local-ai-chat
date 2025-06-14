@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ChatMessage } from "~/components/ChatMessage"
 import { Button } from "~/components/ui/button"
 import { Textarea } from "~/components/ui/textarea"
@@ -74,7 +74,16 @@ const ChatPage = () => {
 
     setStreamedMessages("");
     setStreamedThought("");
-};
+     };
+
+
+     const handleScrollToBottom = () => {
+        scrollToBottomRef.current?.scrollIntoView()
+     }
+
+     useLayoutEffect(() => {
+        handleScrollToBottom();
+     }, [streamedMessages, streamedThought, messages]);
 
 
     return (
